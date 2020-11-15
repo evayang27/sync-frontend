@@ -23,6 +23,7 @@
         </b-row>
       </b-col>
     </b-row>
+    <Footer />
   </b-container>
 </template>
 
@@ -30,9 +31,10 @@
 import ArticleCell from '@/components/new/Profile/ArticleCell'
 import UserInfo from '@/components/new/Profile/UserInfo'
 import ButtonStack from '@/components/new/Profile/ButtonStack'
+import Footer from '@/components/new/Footer'
 export default {
   name: 'Profile',
-  components: { ArticleCell, UserInfo, ButtonStack },
+  components: { ArticleCell, UserInfo, ButtonStack, Footer },
   data () {
     return {
       articleList: [{
