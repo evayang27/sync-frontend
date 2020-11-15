@@ -28,6 +28,7 @@ export default {
   methods: {
     handleClick (index) {
       this.activeIndex = index
+      this.$emit('updateActiveIndex', index)
     }
   }
 }

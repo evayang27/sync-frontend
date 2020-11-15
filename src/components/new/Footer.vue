@@ -1,5 +1,7 @@
 <template>
-  <b-container class="border-top mt-3">
+  <b-container
+    class="border-top mt-3"
+  >
     <b-row>
       <b-col
         cols="6"

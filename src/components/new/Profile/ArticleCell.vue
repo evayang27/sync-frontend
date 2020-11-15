@@ -1,5 +1,5 @@
 <template>
-  <b-container class="cell-container border border-secondary mt-5">
+  <b-container class="cell-container border border-secondary mt-5 mr-5">
     <b-row class="mt-3 mx-2">
       <div class="title">
         {{ title }}
@@ -55,6 +55,9 @@ export default {
 <style scoped lang="scss">
 .cell-container {
   width: 70%;
+}
+.dark {
+  background: $gray-100;
 }
 
 .title {
