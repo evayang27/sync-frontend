@@ -1,44 +1,71 @@
 <template>
-  <b-card>
-    <b-input-group
-      class="mt-3"
-      style="margin-bottom: 20px;"
-    >
-      <b-form-input
-        v-model="searchKeyword"
-        placeholder="搜尋新聞"
-      />
-      <b-input-group-append>
+  <b-card class="border-0 pt-3">
+    <div class="w-100 d-flex justify-content-start">
+      <div class="search-news-container mr-2 flex-grow-1">
+        <b-form-input
+          id="search-news"
+          v-model="searchKeyword"
+          class="border-0"
+          placeholder="搜尋新聞"
+        />
+        <div />
         <b-button
-          variant="outline-secondary"
+          class="mr-1"
+          variant="link"
           @click="getNews"
         >
-          搜尋
+          <b-icon icon="search" />
         </b-button>
-      </b-input-group-append>
-    </b-input-group>
-    <b-row align-h="start">
-      <b-col sm="3">
-        <b-dropdown
-          variant="outline-secondary"
-          text="時間"
-          disabled
+      </div>
+      <div class="search-news-container">
+        <b-button
+          variant="link"
         >
-          <b-dropdown-item>2020/7/4</b-dropdown-item>
-          <b-dropdown-item>2020/7/5</b-dropdown-item>
+          <b-icon icon="chevron-left" />
+        </b-button>
+        <div />
+        <b-button
+          variant="link"
+        >
+          <b-icon icon="chevron-right" />
+        </b-button>
+      </div>
+    </div>
+
+    <label
+      class="text-secondary"
+      for="search-news"
+    >
+      尋找新聞並加到編輯區（建立連結）
+    </label>
+    <b-row>
+      <b-col>
+        <b-dropdown
+          variant="outline-primary"
+          toggle-class="badge-pill px-4"
+        >
+          <template v-slot:button-content>
+            時間
+          </template>
+          <b-dropdown-item>過去 1 小時</b-dropdown-item>
+          <b-dropdown-item>過去 24 小時</b-dropdown-item>
+          <b-dropdown-item>過去 1 週</b-dropdown-item>
+          <b-dropdown-item>過去 1 個月</b-dropdown-item>
+          <b-dropdown-item>過去 1 年</b-dropdown-item>
         </b-dropdown>
-      </b-col>
-      <b-col sm="3">
         <b-dropdown
-          variant="outline-secondary"
-          text="新聞來源"
-          disabled
+          variant="outline-primary"
+          toggle-class="badge-pill px-4"
         >
+          <template v-slot:button-content>
+            新聞來源
+          </template>
           <b-dropdown-item>三立</b-dropdown-item>
           <b-dropdown-item>中天</b-dropdown-item>
         </b-dropdown>
       </b-col>
     </b-row>
+    <hr>
     <div
       v-for="(news, index) in newsList"
       :key="index"
@@ -94,6 +121,43 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+.search-news-container {
+  display: inline-flex;
+  border-radius: 3rem;
+  border: 1px solid $primary;
+  justify-content: flex-end;
+  align-items: center;
 
+  input {
+    border-radius: 3rem;
+  }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  div {
+    padding: 0.25rem 0;
+    height: 1.5rem;
+    width: 1px;
+    border-left: 1px solid $secondary;
+  }
+}
+
+.search-select {
+  background-color: $primary;
+  border-radius: 3rem !important;
+  margin-right: 1rem;
+  border: 1px solid $red;
+}
+
+.search-dropdown {
+  button {
+    border-radius: 3rem !important;
+    margin-right: 1rem;
+    border: 1px solid $red;
+  }
+}
 </style>
