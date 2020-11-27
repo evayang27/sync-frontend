@@ -90,7 +90,7 @@
           :editor="editor"
         >
           <div class="d-flex justify-content-between">
-            <div>
+            <div class="d-flex justify-content-start">
               <button
                 variant="outline-secondary"
                 class="menubar__button"
@@ -121,6 +121,10 @@
               >
                 <b-icon icon="chat-quote-fill" />
               </button>
+              <AddLinkCommandButton
+                :commands="commands"
+                :editor="editor"
+              />
             </div>
             <div class="d-flex justify-content-end align-items-center">
               <b-form-checkbox
@@ -155,12 +159,15 @@
 <script>
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
 import { Heading, Bold, Italic, Strike, Underline, BulletList, ListItem, Placeholder, OrderedList } from 'tiptap-extensions'
+import Link from '@/components/tiptap-extensions/Link'
+import AddLinkCommandButton from '@/components/MenuCommands/Link/AddLinkCommandButton'
 
 export default {
   name: 'TiptapEditPage',
   components: {
     EditorContent,
-    EditorMenuBar
+    EditorMenuBar,
+    AddLinkCommandButton
   },
   props: {
     content: {
@@ -192,6 +199,7 @@ export default {
         onUpdate: ({ getJSON }) => {
           // console.log(state, transaction)
           // 將資料回傳給父物件
+          console.log(getJSON())
           this.$emit('update:content', getJSON())
         },
         onFocus: () => {
@@ -205,6 +213,7 @@ export default {
           new OrderedList(),
           new Underline(),
           new BulletList(),
+          new Link(),
           new ListItem(),
           new Placeholder({
             emptyEditorClass: 'is-editor-empty',

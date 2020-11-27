@@ -142,6 +142,7 @@
 import { getArticleById, updateArticleById } from '@/api/article'
 import { Editor, EditorContent } from 'tiptap'
 import { Heading, Bold, Italic, Strike, Underline, BulletList, ListItem, Placeholder } from 'tiptap-extensions'
+import Link from '@/components/tiptap-extensions/Link'
 import { getToken } from '@/utils/auth'
 
 export default {
@@ -219,6 +220,7 @@ export default {
           new Underline(),
           new BulletList(),
           new ListItem(),
+          new Link(),
           new Placeholder({
             emptyEditorClass: 'is-editor-empty',
             emptyNodeClass: 'is-empty',
