@@ -58,7 +58,8 @@ export default {
         href: '',
         text: ''
       },
-      addLinkDialogVisible: false
+      addLinkDialogVisible: false,
+      currentText: ''
     }
   },
   methods: {
@@ -66,7 +67,7 @@ export default {
       const from = this.editor.state.selection.from
       const to = this.editor.state.selection.to
       console.log(from, to)
-      if (from !== to) {
+      if (from !== to && this.currentText === this.linkAttrs.text) {
         this.commands.link(this.linkAttrs)
         this.editor.setSelection(to, to)
         this.editor.focus()
@@ -74,7 +75,6 @@ export default {
         this.editor.view.dispatch(transaction)
       } else {
         // const mark = this.editor.schema.marks.link.create({ href: this.linkAttrs.href })
-
         // const transaction = this.editor.state.tr.insertText(this.linkAttrs.text)
         // transaction.addMark(from, from + this.linkAttrs.text.length, mark)
         // this.editor.view.dispatch(transaction)
@@ -85,13 +85,13 @@ export default {
       this.closeAddLinkDialog()
     },
     openAddLinkDialog () {
-      this.addLinkDialogVisible = true
+      this.linkAttrs.href = ''
+      this.linkAttrs.text = ''
       const { selection, state } = this.editor
       // get marks, if any from selected area
-
       const { from, to } = selection
-      this.linkAttrs.text = state.doc.textBetween(from, to, ' ')
-      console.log(this.linkAttrs.text)
+      this.currentText = state.doc.textBetween(from, to, ' ')
+      this.linkAttrs.text = this.currentText
 
       let marks = []
       state.doc.nodesBetween(from, to, (node) => {
@@ -99,7 +99,9 @@ export default {
       })
 
       const mark = marks.find((markItem) => markItem.type.name === 'link')
-      if (mark) { this.linkAttrs.href = mark.href }
+      if (mark) { this.linkAttrs.href = mark.attrs.href }
+
+      this.addLinkDialogVisible = true
     },
     closeAddLinkDialog () {
       this.addLinkDialogVisible = false
