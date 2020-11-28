@@ -25,13 +25,23 @@
           v-model="linkAttrs.href"
           placeholder="輸入連結"
         />
-      </b-form-group><b-form-group>
+      </b-form-group>
+      <b-form-group>
         <label>
-          目標連結
+          顯示文字
         </label>
         <b-form-input
           v-model="linkAttrs.text"
-          placeholder="輸入連結"
+          placeholder="輸入欲顯示的文字，可以再修改"
+        />
+      </b-form-group>
+      <b-form-group>
+        <label>
+          參考文章
+        </label>
+        <b-form-input
+          v-model="linkAttrs.title"
+          placeholder="輸入參考文章的標題"
         />
       </b-form-group>
     </b-modal>
@@ -56,10 +66,12 @@ export default {
     return {
       linkAttrs: {
         href: '',
-        text: ''
+        text: '',
+        title: ''
       },
       addLinkDialogVisible: false,
-      currentText: ''
+      currentText: '',
+      currentReferenceIndex: 1
     }
   },
   methods: {
@@ -71,17 +83,18 @@ export default {
         this.commands.link(this.linkAttrs)
         this.editor.setSelection(to, to)
         this.editor.focus()
-        const transaction = this.editor.state.tr.insertText(' [1]')
+        const transaction = this.editor.state.tr.insertText(` [${this.currentReferenceIndex}]`)
         this.editor.view.dispatch(transaction)
       } else {
         // const mark = this.editor.schema.marks.link.create({ href: this.linkAttrs.href })
         // const transaction = this.editor.state.tr.insertText(this.linkAttrs.text)
         // transaction.addMark(from, from + this.linkAttrs.text.length, mark)
         // this.editor.view.dispatch(transaction)
-        insertHTML(this.editor, `<a href="${this.linkAttrs.href}" target="_blank">${this.linkAttrs.text}</a><span> [1]</span>`)
+        insertHTML(this.editor, `<a href="${this.linkAttrs.href}" target="_blank">${this.linkAttrs.text}</a><span> [${this.currentReferenceIndex}]</span>`)
       }
 
       // insertHTML(this.editor, `<a href="${this.linkAttrs.href}" target="_blank">${this.linkAttrs.text}</a><span> [1]</span>`)
+      this.$emit('handleInsertLink', { ...this.linkAttrs, currentReferenceIndex: this.currentReferenceIndex })
       this.closeAddLinkDialog()
     },
     openAddLinkDialog () {
@@ -100,7 +113,14 @@ export default {
 
       const mark = marks.find((markItem) => markItem.type.name === 'link')
       if (mark) { this.linkAttrs.href = mark.attrs.href }
+      let linkCount = 0
+      state.doc.descendants((node) => {
+        if (node.marks.length > 0 && node.marks.find((markItem) => markItem.type.name === 'link')) {
+          linkCount += 1
+        }
+      })
 
+      this.currentReferenceIndex = linkCount + 1
       this.addLinkDialogVisible = true
     },
     closeAddLinkDialog () {

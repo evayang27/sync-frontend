@@ -60,7 +60,12 @@ input {
 }
 
 .active .ProseMirror {
-  min-height: 200px !important;
+  min-height: 16rem !important;
+}
+
+.static-link {
+  text-decoration: underline;
+  color: $primary;
 }
 
 @import './Post/main.scss';

@@ -15,7 +15,7 @@
 
       <div class="d-flex justify-content-center align-items-center border rounded bg-white datetime-container">
         <b-dropdown
-          text="2020年12月1日"
+          :text="tempData.blockDateValue"
           toggle-class="py-0 border-0"
           variant="link"
           no-caret
@@ -29,57 +29,23 @@
         </b-dropdown>
         <span>|</span>
         <b-dropdown
-          text="時間"
+          :text="tempData.blockTimeValue"
           toggle-class="py-0 border-0"
           variant="link"
           no-caret
         >
-          <b-calendar
-            v-model="tempData.blockDateValue"
+          <b-time
+            v-model="tempData.blockTimeValue"
             locale="zh"
+            :now-button="true"
+            :show-seconds="false"
+            :minutes-step="10"
+            :no-close-button="true"
+            label-now-button="現在時間"
+            label-no-time-selected="時間"
             :hide-header="true"
-            label=""
           />
         </b-dropdown>
-      </div>
-
-      <div class="d-none">
-        <label
-          class="sr-only"
-          :for="`block-datepicker-${blockId}`"
-        />
-        <b-form-datepicker
-          :id="`block-datepicker-${blockId}`"
-          v-model="tempData.blockDateValue"
-          class="mb-2 mr-sm-2 mb-sm-0"
-          :hide-header="true"
-          locale="zh"
-          :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-          label-no-date-selected="日期"
-          label-help=""
-          calendar-width="100%"
-          @input="handleChangeDate"
-        />
-
-        <label
-          class="sr-only"
-          :for="`block-timepicker-${blockId}`"
-        />
-        <b-form-timepicker
-          :id="`block-timepicker-${blockId}`"
-          v-model="tempData.blockTimeValue"
-          class="mb-2 mr-sm-2 mb-sm-0"
-          :hour12="false"
-          locale="zh"
-          :now-button="true"
-          :show-seconds="false"
-          :minutes-step="10"
-          :no-close-button="true"
-          label-now-button="現在時間"
-          label-no-time-selected="時間"
-          :hide-header="true"
-          @input="handleChangeTime"
-        />
       </div>
     </div>
 
@@ -118,12 +84,15 @@
               <button
                 variant="outline-secondary"
                 class="menubar__button"
+                :class="{ 'is-active': isActive.blockquote() }"
+                @click="commands.blockquote"
               >
                 <b-icon icon="chat-quote-fill" />
               </button>
               <AddLinkCommandButton
                 :commands="commands"
                 :editor="editor"
+                @handleInsertLink="handleInsertLink"
               />
             </div>
             <div class="d-flex justify-content-end align-items-center">
@@ -142,23 +111,91 @@
             </div>
           </div>
         </editor-menu-bar>
+        <editor-menu-bubble
+          v-slot="{ commands, isActive, getMarkAttrs, menu }"
+          class="menububble"
+          :editor="editor"
+          @hide="hideLinkMenu"
+        >
+          <div
+            class="menububble"
+            :class="{ 'is-active': menu.isActive }"
+            :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+          >
+            <form
+              v-if="linkMenuIsActive"
+              class="menububble__form"
+              @submit.prevent="setLinkUrl(commands.link, linkUrl)"
+            >
+              <input
+                ref="linkInput"
+                v-model="linkUrl"
+                class="menububble__input"
+                type="text"
+                placeholder="貼上引用連結或點選右邊搜尋欄新聞"
+                @keydown.esc="hideLinkMenu"
+              >
+              <button
+                class="menububble__button"
+                type="button"
+                @click="setLinkUrl(commands.link, null)"
+              >
+                <b-icon
+                  icon="x"
+                  scale="1.5"
+                />
+              </button>
+            </form>
+
+            <template v-else>
+              <button
+                class="menububble__button"
+                :class="{ 'is-active': isActive.link() }"
+                @click="showLinkMenu(getMarkAttrs('link'))"
+              >
+                <span>{{ isActive.link() ? '更新引用連結' : '新增引用連結' }}</span>
+                <b-icon
+                  class="ml-2"
+                  icon="link45deg"
+                  scale="1.5"
+                />
+              </button>
+            </template>
+          </div>
+        </editor-menu-bubble>
       </b-col>
     </b-row>
     <b-row>
       <b-col>
-        <editor-content
-          ref="editorContent"
-          :class="['rounded', 'border' ,'bg-white', 'editor__content', 'p-3', { 'active': initialized}]"
-          :editor="editor"
-        />
+        <div class="rounded border bg-white">
+          <editor-content
+            ref="editorContent"
+            :class="['editor__content', 'px-3', 'pt-3', { 'active': initialized}]"
+            :editor="editor"
+          />
+          <div
+            v-for="(link, index) in links"
+            :key="index"
+            class="px-3 pb-3"
+          >
+            <span class="px-2 border">{{ link.currentReferenceIndex }}</span>
+            <a
+              class="static-link ml-1"
+              :href="link.href"
+              target="_blank"
+            >
+              {{ link.title }}
+            </a>
+          </div>
+        </div>
       </b-col>
     </b-row>
   </div>
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-import { Heading, Bold, Italic, Strike, Underline, BulletList, ListItem, Placeholder, OrderedList } from 'tiptap-extensions'
+import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap'
+import { Blockquote, Heading, Bold, Italic, Strike, Underline, BulletList, ListItem, Placeholder, OrderedList } from 'tiptap-extensions'
 import Link from '@/components/tiptap-extensions/Link'
 import AddLinkCommandButton from '@/components/MenuCommands/Link/AddLinkCommandButton'
 
@@ -167,6 +204,7 @@ export default {
   components: {
     EditorContent,
     EditorMenuBar,
+    EditorMenuBubble,
     AddLinkCommandButton
   },
   props: {
@@ -191,6 +229,7 @@ export default {
         blockDateValue: '',
         blockTimeValue: ''
       },
+      links: [],
       editor: new Editor({
         autoFocus: true,
         onInit: () => {
@@ -206,6 +245,7 @@ export default {
           this.onEditorFocus()
         },
         extensions: [
+          new Blockquote(),
           new Heading({ levels: [1, 2, 3] }),
           new Bold(),
           new Italic(),
@@ -225,6 +265,8 @@ export default {
         ],
         content: this.content
       }),
+      linkUrl: null,
+      linkMenuIsActive: false,
       initialized: false
     }
   },
@@ -261,6 +303,26 @@ export default {
     },
     onEditorFocus () {
       this.$emit('onEdit', this.editor)
+    },
+    handleInsertLink (linkAttrs) {
+      console.log(linkAttrs)
+      this.links.push(linkAttrs)
+    },
+    showLinkMenu (attrs) {
+      this.linkUrl = attrs.href
+      this.linkMenuIsActive = true
+      this.$nextTick(() => {
+        this.$refs.linkInput.focus()
+      })
+    },
+    hideLinkMenu () {
+      this.linkUrl = null
+      this.linkMenuIsActive = false
+    },
+    setLinkUrl (command, url) {
+      command({ href: url })
+      this.handleInsertLink({ href: url, title: url, currentReferenceIndex: this.links.length + 1 })
+      this.hideLinkMenu()
     }
   }
 }

@@ -7,14 +7,14 @@ import AddLinkCommandButton from '@/components/MenuCommands/Link/AddLinkCommandB
 function getAttrs (dom) {
   return {
     href: dom.getAttribute('href'),
-    openInNewTab: dom.getAttribute('target') === '_blank'
+    target: dom.getAttribute('target') === '_blank'
   }
 }
 
 function toDOM (mark) {
   const {
     href,
-    openInNewTab
+    target
   } = mark.attrs
 
   const attrs = {}
@@ -22,7 +22,7 @@ function toDOM (mark) {
 
   let ref = 'nofollow'
 
-  if (openInNewTab) {
+  if (target) {
     attrs.target = '_blank'
     ref += ' noopener noreferrer'
   }
@@ -39,7 +39,7 @@ export default class Link extends TiptapLink {
         href: {
           default: null
         },
-        openInNewTab: {
+        target: {
           default: true
         }
       },
