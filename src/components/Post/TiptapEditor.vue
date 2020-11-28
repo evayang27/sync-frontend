@@ -111,63 +111,65 @@
             </div>
           </div>
         </editor-menu-bar>
-        <editor-menu-bubble
-          v-slot="{ commands, isActive, getMarkAttrs, menu }"
-          class="menububble"
-          :editor="editor"
-          @hide="hideLinkMenu"
-        >
-          <div
-            class="menububble"
-            :class="{ 'is-active': menu.isActive }"
-            :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
-          >
-            <form
-              v-if="linkMenuIsActive"
-              class="menububble__form"
-              @submit.prevent="setLinkUrl(commands.link, linkUrl)"
-            >
-              <input
-                ref="linkInput"
-                v-model="linkUrl"
-                class="menububble__input"
-                type="text"
-                placeholder="貼上引用連結或點選右邊搜尋欄新聞"
-                @keydown.esc="hideLinkMenu"
-              >
-              <button
-                class="menububble__button"
-                type="button"
-                @click="setLinkUrl(commands.link, null)"
-              >
-                <b-icon
-                  icon="x"
-                  scale="1.5"
-                />
-              </button>
-            </form>
-
-            <template v-else>
-              <button
-                class="menububble__button"
-                :class="{ 'is-active': isActive.link() }"
-                @click="showLinkMenu(getMarkAttrs('link'))"
-              >
-                <span>{{ isActive.link() ? '更新引用連結' : '新增引用連結' }}</span>
-                <b-icon
-                  class="ml-2"
-                  icon="link45deg"
-                  scale="1.5"
-                />
-              </button>
-            </template>
-          </div>
-        </editor-menu-bubble>
       </b-col>
     </b-row>
     <b-row>
       <b-col>
         <div class="rounded border bg-white">
+          <editor-menu-bubble
+            v-slot="{ commands, isActive, getMarkAttrs, menu }"
+            class="menububble"
+            :editor="editor"
+            @hide="hideLinkMenu"
+          >
+            <div
+              ref="menuBubble"
+              class="menububble"
+              :class="{ 'is-active': menu.isActive }"
+              :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+            >
+              <form
+                v-if="linkMenuIsActive"
+                class="menububble__form"
+                @submit.prevent="setLinkUrl(commands.link, linkUrl)"
+              >
+                <input
+                  ref="linkInput"
+                  v-model="linkUrl"
+                  class="menububble__input"
+                  style="min-width: 15rem !important;"
+                  type="text"
+                  placeholder="貼上引用連結或點選右邊搜尋欄新聞"
+                  @keydown.esc="hideLinkMenu"
+                >
+                <button
+                  class="menububble__button ml-1"
+                  type="button"
+                  @click="setLinkUrl(commands.link, null)"
+                >
+                  <b-icon
+                    icon="x"
+                    scale="1.5"
+                  />
+                </button>
+              </form>
+
+              <template v-else>
+                <button
+                  class="menububble__button"
+                  :class="{ 'is-active': isActive.link() }"
+                  @click="showLinkMenu(getMarkAttrs('link'))"
+                >
+                  <span>{{ isActive.link() ? '更新引用連結' : '新增引用連結' }}</span>
+                  <b-icon
+                    class="ml-2"
+                    icon="link45deg"
+                    scale="1.5"
+                  />
+                </button>
+              </template>
+            </div>
+          </editor-menu-bubble>
           <editor-content
             ref="editorContent"
             :class="['editor__content', 'px-3', 'pt-3', { 'active': initialized}]"
@@ -267,7 +269,8 @@ export default {
       }),
       linkUrl: null,
       linkMenuIsActive: false,
-      initialized: false
+      initialized: false,
+      popper: null
     }
   },
   beforeDestroy () {
@@ -312,6 +315,12 @@ export default {
       this.linkUrl = attrs.href
       this.linkMenuIsActive = true
       this.$nextTick(() => {
+        const menuBubble = this.$refs.menuBubble
+        if (menuBubble.offsetLeft <= menuBubble.offsetWidth / 2 - 15) {
+          menuBubble.style.left = `${menuBubble.offsetWidth / 2}px`
+        } else if (menuBubble.offsetLeft >= menuBubble.parentElement.offsetWidth + 30 - menuBubble.offsetWidth / 2) {
+          menuBubble.style.left = `${menuBubble.parentElement.offsetWidth + 30 - menuBubble.offsetWidth / 2}px`
+        }
         this.$refs.linkInput.focus()
       })
     },
@@ -321,7 +330,9 @@ export default {
     },
     setLinkUrl (command, url) {
       command({ href: url })
-      this.handleInsertLink({ href: url, title: url, currentReferenceIndex: this.links.length + 1 })
+      if (url) {
+        this.handleInsertLink({ href: url, title: url, currentReferenceIndex: this.links.length + 1 })
+      }
       this.hideLinkMenu()
     }
   }

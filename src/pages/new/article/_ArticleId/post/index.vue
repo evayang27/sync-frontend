@@ -373,12 +373,14 @@ export default {
 .main-editor-area {
   display:inline-block;
   height: calc(100vh - 100px);
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
 .news-area {
   display:inline-block;
   height: calc(100vh - 100px);
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 </style>
