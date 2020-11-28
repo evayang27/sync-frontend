@@ -131,7 +131,7 @@
               <form
                 v-if="linkMenuIsActive"
                 class="menububble__form"
-                @submit.prevent="setLinkUrl(commands.link, linkUrl)"
+                @submit.prevent="setLinkUrl(commands.link, linkUrl, isActive.link())"
               >
                 <input
                   ref="linkInput"
@@ -145,7 +145,7 @@
                 <button
                   class="menububble__button ml-1"
                   type="button"
-                  @click="setLinkUrl(commands.link, null)"
+                  @click="setLinkUrl(commands.link, null, false)"
                 >
                   <b-icon
                     icon="x"
@@ -181,13 +181,13 @@
             class="px-3 pb-3"
           >
             <span class="px-2 border">{{ link.currentReferenceIndex }}</span>
-            <a
+            <b-link
               class="static-link ml-1"
               :href="link.href"
               target="_blank"
             >
               {{ link.title }}
-            </a>
+            </b-link>
           </div>
         </div>
       </b-col>
@@ -269,8 +269,7 @@ export default {
       }),
       linkUrl: null,
       linkMenuIsActive: false,
-      initialized: false,
-      popper: null
+      initialized: false
     }
   },
   beforeDestroy () {
@@ -311,6 +310,13 @@ export default {
       console.log(linkAttrs)
       this.links.push(linkAttrs)
     },
+    handleUpdateLink (index, linkAttrs) {
+      if (index >= 0 && index < this.links.length) {
+        this.links[index].title = linkAttrs.title || this.links[index].title
+        this.links[index].href = linkAttrs.href || this.links[index].href
+        this.links[index].currentReferenceIndex = linkAttrs.currentReferenceIndex || this.links[index].currentReferenceIndex
+      }
+    },
     showLinkMenu (attrs) {
       this.linkUrl = attrs.href
       this.linkMenuIsActive = true
@@ -328,12 +334,42 @@ export default {
       this.linkUrl = null
       this.linkMenuIsActive = false
     },
-    setLinkUrl (command, url) {
-      command({ href: url })
-      if (url) {
-        this.handleInsertLink({ href: url, title: url, currentReferenceIndex: this.links.length + 1 })
-      }
+    setLinkUrl (command, url, isActiveLink) {
       this.hideLinkMenu()
+      if (url) {
+        const state = this.editor.state
+        const { from, to } = state.selection
+        if (isActiveLink) {
+          let marks = []
+          state.doc.nodesBetween(from, to, (node) => {
+            marks = [...marks, ...node.marks]
+          })
+          const mark = marks.find((markItem) => markItem.type.name === 'link')
+          let findIndex
+
+          this.links.some((linkAttr, index) => {
+            if (linkAttr.href === mark.attrs.href) {
+              findIndex = index
+              return true
+            }
+          })
+          console.log(findIndex, this.links[findIndex], url)
+          this.handleUpdateLink(findIndex, { href: url })
+          command({ href: url })
+          this.editor.setSelection(to, to)
+          this.editor.focus()
+        } else {
+          command({ href: url })
+          this.editor.setSelection(to, to)
+          this.editor.focus()
+          const nextIndex = this.links.length + 1
+          this.handleInsertLink({ href: url, title: url, currentReferenceIndex: nextIndex })
+          const transaction = this.editor.state.tr.insertText(` [${nextIndex}]`)
+          this.editor.view.dispatch(transaction)
+        }
+      } else {
+        command({ href: url })
+      }
     }
   }
 }
