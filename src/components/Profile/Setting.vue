@@ -64,10 +64,11 @@
     <div class="section pt-5">
       <h4>偏好設定</h4>
       <PreferenceItem
-        v-for="(preference, preferenceIndex) in mockPreference"
-        :key="preferenceIndex"
+        v-for="(prop, index) in prefProps"
+        :key="index"
+        :property="prop"
         class="setting-pref"
-        :preference="preference"
+        @update:status="updateHandler(prop.key, $event)"
       />
     </div>
   </b-container>
@@ -75,13 +76,14 @@
 
 <script>
 import PreferenceItem from './PreferenceItem.vue'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 /* TODO: replace with API */
-class Preference {
-  constructor(title, description, status) {
+class PrefProp {
+  constructor(title, description, key, status) {
     this.title = title
     this.description = description
+    this.key = key
     this.status = status
   }
 }
@@ -90,27 +92,43 @@ export default {
   components: {
     PreferenceItem
   },
+  props: {
+    preferences: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     ...mapGetters(['displayName', 'photoURL']),
     ...mapGetters({ email: 'user/email' }),
-    mockPreference() {
+    prefProps() {
       return [
-        new Preference(
+        new PrefProp(
           '匿名發文',
           '開啟後您的新增段落與文章預設作者都將匿名',
-          false
+          'isAnonymous',
+          this.preferences.isAnonymous
         ),
-        new Preference(
+        new PrefProp(
           '編輯文章更新通知',
           '開啟後您曾編輯過的文章有任何更新都將通知您',
+          'editedNotifications',
           false
         ),
-        new Preference(
+        new PrefProp(
           '收藏文章更新通知',
           '開啟後您的收藏文章有任何更新都將通知您',
+          'subscribedNotifications',
           false
         )
       ]
+    }
+  },
+  methods: {
+    ...mapActions(['updatePreference']),
+    updateHandler(key, value) {
+      console.log(value)
+      this.updatePreference({ key, value })
     }
   }
 }

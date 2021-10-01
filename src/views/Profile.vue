@@ -93,7 +93,7 @@
           {{ contentTitle }}
         </h2>
         <slot v-if="currentShowingIndex === 3">
-          <Setting />
+          <Setting :preferences="preferences" />
         </slot>
         <slot v-for="article in showingArticles" v-else>
           <ArticleCard
@@ -137,7 +137,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['photoURL', 'displayName', 'uid', 'isLogin', 'user']),
+    ...mapGetters([
+      'photoURL',
+      'displayName',
+      'uid',
+      'isLogin',
+      'user',
+      'preferences'
+    ]),
     ...mapGetters({ createAt: 'user/createAt', email: 'user/email' }),
     creationDateTime() {
       return this.createAt

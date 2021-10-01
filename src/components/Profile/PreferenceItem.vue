@@ -1,14 +1,15 @@
 <template>
   <b-container class="no-gutters pl-0 pr-0 pb-3 mt-2">
     <b-form-checkbox
-      v-model="preference.status"
+      v-model="property.status"
       switch
       size="lg"
       class="switch--color float-right"
+      @change="$emit('update:status', property.status)"
     />
     <div>
-      <div id="title">{{ preference.title }}</div>
-      <div id="description">{{ preference.description }}</div>
+      <div id="title">{{ property.title }}</div>
+      <div id="description">{{ property.description }}</div>
     </div>
   </b-container>
 </template>
@@ -16,7 +17,7 @@
 <script>
 export default {
   props: {
-    preference: {
+    property: {
       type: Object,
       required: true
     }
