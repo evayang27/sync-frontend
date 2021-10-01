@@ -28,7 +28,8 @@ const store = new Vuex.Store({
     post: state => state.post,
     user: state => state.user,
     showFooter: state => state.showFooter,
-    notifications: state => state.user.notifications
+    notifications: state => state.user.notifications,
+    preferences: state => state.user.preferences
   },
   mutations: {
     SET_FOOTER(state, show) {
