@@ -18,18 +18,18 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('@/views/new/Login'),
+      component: () => import('@/views/Login'),
       hidden: true
     },
     {
       path: '/search',
       name: 'Search',
-      component: () => import('@/views/new/Search')
+      component: () => import('@/views/Search')
     },
     {
       path: '/signup',
       name: 'SignUp',
-      component: () => import('@/views/new/SignUp'),
+      component: () => import('@/views/SignUp'),
       hidden: true
     },
     {
@@ -47,7 +47,7 @@ export default new Router({
     },
     {
       path: '/article/:ArticleID/post',
-      component: () => import('@/views/new/Post'),
+      component: () => import('@/views/Post'),
       beforeEnter: (to, from, next) => {
         isLogin() ? next() : next('/login')
       }
@@ -55,7 +55,7 @@ export default new Router({
     {
       path: '/post',
       name: 'Post',
-      component: () => import('@/views/new/Post'),
+      component: () => import('@/views/Post'),
       beforeEnter: (to, from, next) => {
         isLogin() ? next() : next('/login')
       }
