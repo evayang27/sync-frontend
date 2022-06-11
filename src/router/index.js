@@ -53,10 +53,6 @@ export default new Router({
       }
     },
     {
-      path: '/revision/:BlockID/',
-      component: () => import('@/views/new/Revision')
-    },
-    {
       path: '/post',
       name: 'Post',
       component: () => import('@/views/new/Post'),
