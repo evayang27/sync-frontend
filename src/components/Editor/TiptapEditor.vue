@@ -9,12 +9,22 @@
     >
       <icon icon="link" size="md" class="link-icon" />
       <div class="url">
-        <a :href="editor.getAttributes('link').href" target="_blank">{{ editor.getAttributes('link').href }}</a>
+        <a :href="editor.getAttributes('link').href" target="_blank">{{
+          editor.getAttributes('link').href
+        }}</a>
       </div>
-      <b-button variant="link" class="text-nowrap menu-btn" @click="menuEditLink()">
+      <b-button
+        variant="link"
+        class="text-nowrap menu-btn"
+        @click="menuEditLink()"
+      >
         編輯
       </b-button>
-      <b-button variant="link" class="text-nowrap menu-btn" @click="menuRemoveLink()">
+      <b-button
+        variant="link"
+        class="text-nowrap menu-btn"
+        @click="menuRemoveLink()"
+      >
         刪除
       </b-button>
     </bubble-menu>
@@ -25,7 +35,10 @@
       :editor="editor"
       @showModal="showModal"
     />
-    <editor-content :editor="editor" :class="editable ? 'editor__content__edit': 'editor__content'" />
+    <editor-content
+      :editor="editor"
+      :class="editable ? 'editor__content__edit' : 'editor__content'"
+    />
   </div>
 </template>
 
@@ -69,14 +82,21 @@ export default {
       caretPosBeg: null,
       caretPosEnd: null,
       selectedText: '',
-      bubbleMenuOptions: { duration: 100, placement: 'bottom-start', zIndex: 100, popperOptions: { modifiers: [
-        {
-          name: 'preventOverflow',
-          options: {
-            boundary: document.querySelector('.main-editor-area')
-          }
+      bubbleMenuOptions: {
+        duration: 100,
+        placement: 'bottom-start',
+        zIndex: 100,
+        popperOptions: {
+          modifiers: [
+            {
+              name: 'preventOverflow',
+              options: {
+                boundary: document.querySelector('.main-editor-area')
+              }
+            }
+          ]
         }
-      ] }}
+      }
     }
   },
 
@@ -134,14 +154,18 @@ export default {
         }
         context['content'] = this.text
         this.$store.commit('post/SET_MODAL_CONTEXT', { context })
-        this.$store.commit('post/SET_MODAL_COMPONENT', { componentString: 'LINK' })
+        this.$store.commit('post/SET_MODAL_COMPONENT', {
+          componentString: 'LINK'
+        })
       } else if (modal === 'citation-modal') {
         this.$store.commit('post/SET_MODAL_CONTEXT', { context: { index: -1 }})
         this.$store.commit('post/SET_MODAL_COMPONENT', {
           componentString: 'CITATION'
         })
       } else if (modal === 'upload-image-modal') {
-        this.$store.commit('post/SET_MODAL_COMPONENT', { componentString: 'UPLOAD_IMAGE' })
+        this.$store.commit('post/SET_MODAL_COMPONENT', {
+          componentString: 'UPLOAD_IMAGE'
+        })
       }
     },
     shouldShow({ editor, view, state, oldState }) {
@@ -317,7 +341,7 @@ export default {
       height: 24px;
       left: 0;
     }
-    &:last-child{
+    &:last-child {
       padding-right: 0px;
     }
   }
