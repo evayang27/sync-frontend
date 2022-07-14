@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { createVuePlugin as vue } from "vite-plugin-vue2";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import legacy from "@vitejs/plugin-legacy";
@@ -16,7 +16,6 @@ export default defineConfig({
   },
 
   build: {
-    target: "esnext",
     minify: "terser",
     terserOptions: {
       compress: {
@@ -42,6 +41,10 @@ export default defineConfig({
     legacy({
       targets: ["defaults", "not IE 11"],
     }),
+
+    // Good chunking strategy for SPA
+    // See: https://vitejs.dev/guide/build.html#chunking-strategy
+    splitVendorChunkPlugin(),
 
     vue({
       target: "es2015",
