@@ -24,7 +24,8 @@
       </div>
       <!-- right content -->
       <div class="d-flex align-items-center">
-        <b-img block center style="max-height: 300px; max-width: 512px;" :src="imgLink" />
+        <b-img v-if="imgLink" block center style="max-height: 300px; max-width: 512px;" :src="imgLink" />
+        <b-img-lazy v-else block center style="max-height: 300px; max-width: 512px;" src="@/assets/images/thumbnail-placeholder.svg" />
       </div>
     </div>
   </div></template>
@@ -68,15 +69,16 @@ export default {
       default: ''
     }
   },
-  data() {
-    return {
-      thumbnailPlaceholder: require('@/assets/images/thumbnail-placeholder.svg')
-    }
-  },
+  // data() {
+  //   return {
+  //     thumbnailPlaceholder: import('@/assets/images/thumbnail-placeholder.svg')
+  //   }
+  // },
   computed: {
     imgLink() {
       const imgLink = this.getArticleFirstImage(this.blocks)
-      return imgLink !== null ? imgLink : this.thumbnailPlaceholder
+      // return imgLink !== null ? imgLink : this.thumbnailPlaceholder
+      return imgLink
     }
   },
   methods: {

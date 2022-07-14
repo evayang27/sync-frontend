@@ -20,7 +20,7 @@ class FirebaseAuth {
   }
 
   async setupFirebase() {
-    if (process.env.NODE_ENV === 'test') return Promise.resolve()
+    if (import.meta.env.NODE_ENV === 'test') return Promise.resolve()
 
     await import('/config/firebaseConfig')
       .then(({ firebaseConfig }) => {
