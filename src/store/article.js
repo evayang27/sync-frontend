@@ -1,4 +1,5 @@
 import UserAPI from '@/api/user'
+import ArticleAPI from '@/api/article'
 import FirebaseAuthInstance from '../utils/firebase'
 
 const getDefaultState = () => {
@@ -6,7 +7,8 @@ const getDefaultState = () => {
     editedList: [],
     subscribedList: [],
     viewedList: [],
-    isProfileReady: false
+    isProfileReady: false,
+    api: ArticleAPI
   }
 }
 
@@ -16,7 +18,8 @@ const getters = {
   editedList: state => state.editedList,
   subscribedList: state => state.subscribedList,
   viewedList: state => state.viewedList,
-  isProfileReady: state => state.isProfileReady
+  isProfileReady: state => state.isProfileReady,
+  api: state => state.api
 }
 
 const mutations = {

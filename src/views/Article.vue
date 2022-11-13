@@ -181,7 +181,7 @@
 <script>
 // test id:  5f5113349779a26bd0444b26
 import moment from 'moment'
-import articleAPI from '@/api/article'
+import { mapGetters } from 'vuex'
 import TiptapEditor from '@/components/Editor/TiptapEditor.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
 
@@ -230,6 +230,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      articleAPI: 'article/api'
+    }),
     getYear() {
       return this.time.getFullYear()
     },
@@ -307,7 +310,7 @@ export default {
     getArticleData() {
       if (this.articleId) {
         this.isPageReady = false
-        articleAPI
+        this.articleAPI
           .getById(this.articleId)
           .then((response) => {
             if (response.data.code === 200) {
@@ -347,7 +350,7 @@ export default {
           })
       }
       this.isRecommendedReady = false
-      articleAPI
+      this.articleAPI
         .getRecommended(5)
         .then((response) => {
           const data = response.data
