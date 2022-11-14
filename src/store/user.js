@@ -1,4 +1,4 @@
-import UserAPI from '@/api/user'
+import { userAPI } from '@/api/user'
 import { setUserInfo, getUserInfo } from '@/utils/auth'
 
 const getDefaultState = () => {
@@ -45,7 +45,7 @@ const mutations = {
 const actions = {
   sendToken({ commit, dispatch }, userdata) {
     return new Promise((resolve, reject) => {
-      UserAPI.login(userdata)
+      userAPI.login(userdata)
         .then((response) => {
           const { data } = response
           resolve(data.message)

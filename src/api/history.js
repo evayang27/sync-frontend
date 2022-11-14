@@ -1,8 +1,7 @@
-import APIBase from '.'
+import { apiBase } from '.'
 
-class HistoryAPI extends APIBase {
+class HistoryAPI {
   constructor() {
-    super()
     this.prefix_path = ''
   }
 
@@ -14,7 +13,7 @@ class HistoryAPI extends APIBase {
    * @returns {Promise<Any>} : versions of article
    */
   getVersions(articleId, limit, page) {
-    return this.action(`/history/${articleId}`, { limit, page }, 'get')
+    return apiBase.action(`/history/${articleId}`, { limit, page }, 'get')
   }
 
   /**
@@ -24,7 +23,7 @@ class HistoryAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   getBlockRevision(blockId, blockIndex) {
-    return this.action(`/revision/${blockId}`, { blockIndex }, 'get')
+    return apiBase.action(`/revision/${blockId}`, { blockIndex }, 'get')
   }
 
   /**
@@ -35,8 +34,10 @@ class HistoryAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   getComparison(articleId, base, compare) {
-    return this.action(`/compare/${articleId}`, { base, compare }, 'get')
+    return apiBase.action(`/compare/${articleId}`, { base, compare }, 'get')
   }
 }
 
-export default new HistoryAPI()
+export const historyAPI = new HistoryAPI()
+
+// export default new HistoryAPI()

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import articleAPI, { TIME_QUERY } from '@/api/article'
+import { articleAPI, TIME_QUERY } from '@/api/article'
 import router from '@/router'
 
 const state = {

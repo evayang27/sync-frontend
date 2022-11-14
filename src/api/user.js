@@ -1,13 +1,13 @@
-import APIBase from '.'
+import { apiBase } from '.'
 
-class UserAPI extends APIBase {
+class UserAPI {
   constructor() {
-    super()
+    // apiBase.action('/article', {}, 'get')
     this.prefix_path = ''
   }
 
   login(userdata) {
-    return this.action('/login', userdata, 'post')
+    return apiBase.action('/login', userdata, 'post')
   }
 
   /**
@@ -15,7 +15,7 @@ class UserAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   getProfile() {
-    return this.action('/profile', {}, 'post')
+    return apiBase.action('/profile', {}, 'post')
   }
 
   /**
@@ -27,7 +27,7 @@ class UserAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   getArticleInfo() {
-    return this.action('/profile/article', {}, 'post')
+    return apiBase.action('/profile/article', {}, 'post')
   }
 
   /**
@@ -36,7 +36,7 @@ class UserAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   articleViewed(articleId) {
-    return this.action('/profile/view', { articleId }, 'post')
+    return apiBase.action('/profile/view', { articleId }, 'post')
   }
 
   /**
@@ -46,8 +46,10 @@ class UserAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   subscribeArticle(articleId, subscribe) {
-    return this.action('profile/subscribe', { articleId, subscribe }, 'post')
+    return apiBase.action('profile/subscribe', { articleId, subscribe }, 'post')
   }
 }
 
-export default new UserAPI()
+export const userAPI = new UserAPI()
+
+// export default new UserAPI()

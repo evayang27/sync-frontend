@@ -1,9 +1,12 @@
-import APIBase from '.'
+import { apiBase, pathJoin } from '.'
 
-class NewsAPI extends APIBase {
+class NewsAPI {
   constructor() {
-    super()
     this.prefix_path = '/news'
+  }
+
+  getPath(path) {
+    return pathJoin([this.prefix_path, path])
   }
 
   /**
@@ -15,8 +18,8 @@ class NewsAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   search(keyword = '', pageNum = 0, tbs = 'qdr:a', mediaSource = '') {
-    return this.action(
-      '',
+    return apiBase.action(
+      this.getPath('/'),
       {
         q: keyword,
         page: pageNum,
@@ -28,4 +31,6 @@ class NewsAPI extends APIBase {
   }
 }
 
-export default new NewsAPI()
+export const newsAPI = new NewsAPI()
+
+// export default new NewsAPI()

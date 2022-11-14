@@ -1,10 +1,14 @@
 import _ from 'lodash'
-import APIBase from '.'
+import { apiBase, pathJoin } from '.'
 
-class ArticleAPI extends APIBase {
+class ArticleAPI {
   constructor() {
-    super()
+    // apiBase.action('/article', {}, 'get')
     this.prefix_path = '/article'
+  }
+
+  getPath(path) {
+    return pathJoin([this.prefix_path, path])
   }
 
   /**
@@ -12,7 +16,7 @@ class ArticleAPI extends APIBase {
    * @returns {Promise<any>}
    */
   get() {
-    return this.action('/', {}, 'get')
+    return apiBase.action(this.getPath('/'), {}, 'get')
   }
 
   // TODO: temporary solution
@@ -22,7 +26,7 @@ class ArticleAPI extends APIBase {
    * @returns {Promise<Any>}
    */
   getRecommended(limit) {
-    return this.action('/', { limit }, 'get')
+    return apiBase.action(this.getPath('/'), { limit }, 'get')
   }
 
   /**
@@ -31,7 +35,7 @@ class ArticleAPI extends APIBase {
    * @returns {Promise<any>}
    */
   getById(id) {
-    return this.action(`/${id}`, {}, 'get')
+    return apiBase.action(this.getPath(`/${id}`), {}, 'get')
   }
 
   /**
@@ -40,7 +44,7 @@ class ArticleAPI extends APIBase {
    * @returns {Promise<any>}
    */
   create(data) {
-    return this.action('/', data, 'post')
+    return apiBase.action(this.getPath('/'), data, 'post')
   }
 
   /**
@@ -52,7 +56,7 @@ class ArticleAPI extends APIBase {
    * @memberof ArticleAPI
    */
   update(data) {
-    return this.action('/', data, 'put')
+    return apiBase.action(this.getPath('/'), data, 'put')
   }
 
   search(keyword = '', timeQuery = 'qdr:a', category = '', tag = '') {
@@ -64,7 +68,7 @@ class ArticleAPI extends APIBase {
       tag: tag ?? ''
     }
 
-    const ret = this.action('/search', {
+    const ret = apiBase.action(this.getPath('/search'), {
       ...query
     }, 'get')
     this.prefix_path = '/article'
@@ -85,4 +89,6 @@ export const TIME_QUERY = Object.freeze({
   DAY: 'qdr:d'
 })
 
-export default new ArticleAPI()
+export const articleAPI = new ArticleAPI()
+
+// export default new ArticleAPI()

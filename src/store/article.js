@@ -1,4 +1,4 @@
-import UserAPI from '@/api/user'
+import { userAPI } from '@/api/user'
 import FirebaseAuthInstance from '../utils/firebase'
 
 const getDefaultState = () => {
@@ -48,7 +48,7 @@ const actions = {
     // set token
     if (rootGetters.isLogin) {
       try {
-        const { data } = await UserAPI.getProfile()
+        const { data } = await userAPI.getProfile()
         commit('SET_PROFILE', data.data.articles || {})
         return Promise.resolve(data.data)
       } catch (error) {
@@ -65,7 +65,7 @@ const actions = {
   },
   async SUBSCRIBE({ commit, dispatch }, articleId) {
     try {
-      const { data } = await UserAPI.subscribeArticle(articleId, true)
+      const { data } = await userAPI.subscribeArticle(articleId, true)
       const payload = data.data
       commit('SET_SUBSCRIBE', payload)
       // commit('ADD_SUBSCRIBE', articleId)
@@ -77,7 +77,7 @@ const actions = {
   },
   async UNSUBSCRIBE({ commit, dispatch }, articleId) {
     try {
-      const { data } = await UserAPI.subscribeArticle(articleId, false)
+      const { data } = await userAPI.subscribeArticle(articleId, false)
       const payload = data.data
       commit('SET_SUBSCRIBE', payload)
       // Remove legacy structure
@@ -96,7 +96,7 @@ const actions = {
       return
     }
     try {
-      const { data } = await UserAPI.articleViewed(articleId)
+      const { data } = await userAPI.articleViewed(articleId)
       commit('ADD_VIEW', articleId)
       return Promise.resolve(data)
     } catch (error) {

@@ -2,10 +2,14 @@ import _ from 'lodash'
 import { api } from '@/utils/api'
 import FirebaseAuthInstance from '../utils/firebase'
 
-function pathJoin(parts, sep) {
+function _pathJoin(parts, sep) {
   const seperator = sep || '/'
   const replace = new RegExp(seperator + '{1,}', 'g')
   return parts.join(seperator).replace(replace, seperator)
+}
+
+export function pathJoin(parts) {
+  return _pathJoin(parts, '/')
 }
 
 async function addToken(data) {
@@ -24,7 +28,7 @@ class APIBase {
 
   getPath(path) {
     path = path || this.path
-    return pathJoin([this.prefix_path, path], '/')
+    return _pathJoin([this.prefix_path, path], '/')
   }
 
   async action(path = null, data = {}, method = null) {
@@ -57,4 +61,4 @@ class APIBase {
   }
 }
 
-export default APIBase
+export const apiBase = new APIBase()

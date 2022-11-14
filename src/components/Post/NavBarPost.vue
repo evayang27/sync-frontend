@@ -80,7 +80,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import articleAPI from '@/api/article'
+import { articleAPI } from '@/api/article'
 import firebase from '@/utils/firebase'
 import Logo from '@/components/Logo.vue'
 import moment from 'moment'
