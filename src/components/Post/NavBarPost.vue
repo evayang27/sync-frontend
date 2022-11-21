@@ -80,7 +80,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import articleAPI from '@/api/article'
 import firebase from '@/utils/firebase'
 import Logo from '@/components/Logo.vue'
 import moment from 'moment'
@@ -96,7 +95,10 @@ export default {
   },
   computed: {
     ...mapGetters(['isLogin', 'uid']),
-    ...mapGetters({ post: 'post' }),
+    ...mapGetters({
+      articleAPI: 'article/api',
+      post: 'post'
+    }),
     showAddPointsAlert: {
       get() {
         return this.post.showAddPointsAlert
@@ -180,7 +182,7 @@ export default {
       articleData.uid = this.uid
       if (this.post.isNewPost) {
         try {
-          const { data } = await articleAPI.create(articleData)
+          const { data } = await this.articleAPI.create(articleData)
           this.isLoading = false
           if (data.code === 200) {
             this.removeArticleLocalStorage()
@@ -196,7 +198,7 @@ export default {
       } else {
         articleData.id = this.post.articleId
         try {
-          const { data } = await articleAPI.update(articleData)
+          const { data } = await this.articleAPI.update(articleData)
           this.isLoading = false
           if (data.code === 200) {
             // show add point alert

@@ -71,7 +71,7 @@
 import ArticleCard from '@/components/ArticleCard.vue'
 import HeadlineCard from '@/components/Headline.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
-import articleAPI from '@/api/article'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
@@ -109,9 +109,14 @@ export default {
   beforeDestroy() {
     clearInterval(this.headlineTimer)
   },
+  computed: {
+    ...mapGetters({
+      articleAPI: 'article/api'
+    })
+  },
   methods: {
     async initializeHomepage() {
-      await articleAPI
+      await this.articleAPI
         .get()
         .then((response) => {
           const { data } = response
@@ -196,7 +201,7 @@ export default {
       if (param) {
         try {
           const categoricNews = []
-          const { data } = await articleAPI.search(undefined, undefined, param)
+          const { data } = await this.articleAPI.search(undefined, undefined, param)
           const type = data.type
           if (type === 'success') {
             const articles = data.data.sort(

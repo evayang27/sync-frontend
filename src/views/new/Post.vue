@@ -238,7 +238,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import articleAPI from '@/api/article'
 import BlockEditor from '@/components/Post/BlockEditor'
 import NewsPanel from '@/components/NewsPanel'
 import { Utils } from '@/utils'
@@ -291,7 +290,10 @@ export default {
   },
   computed: {
     ...mapGetters(['isLogin', 'uid']),
-    ...mapGetters({ post: 'post' }),
+    ...mapGetters({
+      articleAPI: 'article/api',
+      post: 'post'
+    }),
     editPoint() {
       return this.post.isNewPost ? 5 : 2
     },
@@ -353,7 +355,7 @@ export default {
       // fetch article either from localStorage or remote DB
       if (articleId) {
         this.isLoading = true
-        articleAPI.getById(articleId).then((response) => {
+        this.articleAPI.getById(articleId).then((response) => {
           if (response.data.code === 200) {
             let data = response.data.data
             // check localStorage, use localStorage article if newer than lastUpdated

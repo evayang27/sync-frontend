@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import ArticleAPI from '@/api/article'
+import { mapGetters } from 'vuex'
 import ArticleCard from '@/components/ArticleCard.vue'
 
 export default {
@@ -114,6 +114,11 @@ export default {
       hashtagText: this.$route.query.q
     }
   },
+  computed: {
+    ...mapGetters({
+      articleAPI: 'article/api'
+    })
+  },
   watch: {
     async '$route.query'() {
       await this.routerQuerySearch()
@@ -147,7 +152,7 @@ export default {
       if (this.hashtag) {
         try {
           this.isLoading = true
-          const { data } = await ArticleAPI.search(
+          const { data } = await this.articleAPI.search(
             undefined,
             this.queryTimeSelected,
             this.categorySelected,
