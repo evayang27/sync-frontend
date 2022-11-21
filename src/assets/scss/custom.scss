@@ -1,5 +1,33 @@
 $gray: #828282;
 
+$blue-1: #D1DBFF !default;
+$blue-2: #9EB3FF !default;
+$blue-3: #91A9FF !default;
+$blue-4: #2353FF !default;
+$blue-5: #1C42CC !default;
+$blue-6: #153299 !default;
+
+$light-blue-1: #EBFAFF !default;
+$light-blue-2: #B8EDFF !default;
+$light-blue-3: #6BDAFF !default;
+$light-blue-4: #1FC8FE !default;
+$light-blue-5: #189FCC !default;
+$light-blue-6: #0488B2 !default;
+
+$yellow-1: #FFFBEB !default;
+$yellow-2: #FFF2C2 !default;
+$yellow-3: #FFE175 !default;
+$yellow-4: #FFD643 !default;
+$yellow-5: #FFC43D !default;
+$yellow-6: #FFB337 !default;
+
+$red-1: #FFEFE8 !default;
+$red-2: #FFCBB5 !default;
+$red-3: #FF9669 !default;
+$red-4: #FF601C !default;
+$red-5: #E55719 !default;
+$red-6: #CC4D16 !default;
+
 $white:    #fff !default;
 $gray-light: #e3e3e3;
 $nature-2: #f6f6f8;
@@ -7,61 +35,66 @@ $nature-3: #a8a8a8;
 $nature-4: #dbdce1;
 $nature-6: #b6b9c4;
 $nature-8: #838691;
-$gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #838691;
-$gray-900: #212529 !default;
 $black:    #000 !default;
+
+$text-0: rgba(0, 0, 0, 1.0);
 $text-1: rgba(0, 0, 0, 0.85);
 $text-2: rgba(0, 0, 0, 0.65);
 $text-3: rgba(0, 0, 0, 0.45);
 $text-4: rgba(0, 0, 0, 0.20);
 
-$gray-2: #F6F6F8;
-$gray-4: rgba(219, 220, 225, 1);
-$gray-8: #838691;
+$gray-1: #fafafa !default;
+$gray-2: #f0f0f0 !default;
+$gray-3: #e0e0e0 !default;
+$gray-4: #cccccc !default;
+$gray-5: #b3b3b3 !default;
+$gray-6: #949494 !default;
+$gray-7: #737375 !default;
+$gray-8: #5a5a5c !default;
+$gray-9: #3c3c3d !default;
+$gray-10: #282829 !default;
+$gray-11: #1d1d1e !default;
+$gray-12: #0f0f0f !default;
+
+$gray-100: $gray-1 !default;
+$gray-200: $gray-2 !default;
+$gray-300: $gray-3 !default;
+$gray-400: $gray-4 !default;
+$gray-500: $gray-5 !default;
+$gray-600: $gray-6 !default;
+$gray-700: $gray-7 !default;
+$gray-800: $gray-8 !default;
+$gray-900: $gray-9 !default;
 
 $grays: () !default;
 $grays: map-merge(
   (
-    "100": $gray-100,
-    "200": $gray-200,
-    "300": $gray-300,
-    "400": $gray-400,
-    "500": $gray-500,
-    "600": $gray-600,
-    "700": $gray-700,
-    "800": $gray-800,
-    "900": $gray-900
+    "100": $gray-1,
+    "200": $gray-2,
+    "300": $gray-3,
+    "400": $gray-4,
+    "500": $gray-5,
+    "600": $gray-6,
+    "700": $gray-7,
+    "800": $gray-8,
+    "900": $gray-9
   ),
   $grays
 );
 
-$blue:    #2353ff;
+$blue:    $blue-4;
 $blue-25: #1a3ebf;
 $blue-60: #e9eeff;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
-$red:     #ff601c;
+$red:     $red-4 !default;
 $orange:  #fd7e14 !default;
-$yellow:  #ffd643;
+$yellow:  $yellow-4 !default;
 $green:   #28a745 !default;
 $teal:    #20c997 !default;
 $cyan:    #1fc8fe;
-$light-blue: $cyan;
-
-$blue-1: #D1DBFF;
-$blue-2: #9EB3FF;
-$blue-3: #91A9FF;
-$blue-4: #2353FF;
-$blue-5: #1C42CC;
-$blue-6: #153299;
+$light-blue: $light-blue-4 !default;
 
 $colors: () !default;
 $colors: map-merge(
